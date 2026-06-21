@@ -1,306 +1,107 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lanchonete - Pedido Online</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-    <style>
-        :root {
-            --primary-color: #ff4757;
-            --dark-color: #2f3542;
-        }
-
-        body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; padding-bottom: 80px; }
-        .navbar { background-color: var(--dark-color) !important; position: sticky; top: 0; z-index: 1000; }
-        .title { font-weight: 800; letter-spacing: -1px; color: var(--dark-color); }
-        
-        /* Botão Flutuante consertado */
-        .cart-float {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            background-color: var(--primary-color);
-            color: white;
-            width: 65px;
-            height: 65px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 20px rgba(255, 71, 87, 0.4);
-            cursor: pointer;
-            z-index: 2000;
-            border: none;
-        }
-
-        .cart-badge {
-            position: absolute;
-            top: 0;
-            right: 0;
-            background: white;
-            color: var(--primary-color);
-            border: 2px solid var(--primary-color);
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .card-step { border: none; border-radius: 20px; transition: 0.3s; cursor: pointer; }
-        .card-step:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important; }
-        
-        .btn-primary { background-color: var(--primary-color); border: none; padding: 12px 25px; border-radius: 12px; font-weight: 600; }
-        .btn-outline-custom { color: var(--dark-color); border: 2px solid #ddd; border-radius: 15px; padding: 20px; transition: 0.2s; font-weight: 600; background: white; margin-bottom: 10px; }
-        .btn-outline-custom:hover { border-color: var(--primary-color); color: var(--primary-color); background: #fff5f5; }
-
-        .step-content { display: none; }
-        .step-active { display: block; animation: fadeIn 0.4s ease; }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Burger — Cardápio</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-    <button class="cart-float" data-bs-toggle="modal" data-bs-target="#cartModal">
-        <i class="fas fa-shopping-cart fa-lg"></i>
-        <span class="cart-badge" id="cart-count">0</span>
+<section class="hero">
+  <p class="hero-eyebrow">Cardápio Digital</p>
+  <h1 class="hero-title">My<br><em>Burger</em></h1>
+  <div class="hero-meta">
+    <span>Brasília, DF</span>
+    <span class="dot"></span>
+    <span class="hero-status" id="status-badge">Aberto agora</span>
+    <span class="dot"></span>
+    <span>Seg–Dom até 23h</span>
+  </div>
+</section>
+
+<div class="nav-wrap">
+  <nav class="nav">
+    <div class="nav-cats" id="nav-cats">
+      <button class="cat-btn active" onclick="filter('todos', this)">Todos</button>
+      <button class="cat-btn" onclick="filter('Lanches', this)">Lanches</button>
+      <button class="cat-btn" onclick="filter('Batatas', this)">Batatas</button>
+      <button class="cat-btn" onclick="filter('Bebidas', this)">Bebidas</button>
+      <button class="cat-btn" onclick="filter('Combos', this)">Combos</button>
+    </div>
+    <button class="cart-trigger" onclick="openCart()">
+      Pedido <span class="cart-count" id="cart-count">0</span>
     </button>
+  </nav>
+</div>
 
-    <header>
-        <nav class="navbar navbar-dark shadow-sm py-3">
-            <div class="container justify-content-center">
-                <span class="navbar-brand fw-bold fs-3">🍔 LANCHONETE</span>
-            </div>
-        </nav>
-    </header>
+<main class="main">
+  <p class="section-label" id="section-label">Cardápio completo</p>
+  <div class="row g-4" id="products-grid"></div>
+</main>
 
-    <main class="container py-5">
-        <section id="step-1" class="step-content step-active">
-            <div class="text-center mb-5">
-                <h1 class="display-5 title">O que você deseja?</h1>
-                <p class="text-muted">Selecione uma categoria para começar</p>
-            </div>
-            <div class="row g-4 justify-content-center">
-                <div class="col-6 col-md-3" onclick="irParaEtapa(2, 'Sanduíches')">
-                    <div class="card card-step shadow-sm p-4 text-center">
-                        <i class="fas fa-hamburger fa-4x mb-3 text-warning"></i>
-                        <h5 class="fw-bold">Sanduíches</h5>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3" onclick="irParaEtapa(2, 'Batata Frita')">
-                    <div class="card card-step shadow-sm p-4 text-center">
-                        <i class="fas fa-box-open fa-4x mb-3 text-warning"></i>
-                        <h5 class="fw-bold">Batatas</h5>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3" onclick="irParaEtapa(2, 'Bebidas')">
-                    <div class="card card-step shadow-sm p-4 text-center">
-                        <i class="fas fa-wine-glass fa-4x mb-3 text-info"></i>
-                        <h5 class="fw-bold">Bebidas</h5>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3" onclick="irParaEtapa(2, 'Combos')">
-                    <div class="card card-step shadow-sm p-4 text-center">
-                        <i class="fas fa-utensils fa-4x mb-3 text-danger"></i>
-                        <h5 class="fw-bold">Combos</h5>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="step-2" class="step-content">
-            <button class="btn btn-sm btn-light mb-4" onclick="irParaEtapa(1)"><i class="fas fa-arrow-left"></i> Voltar</button>
-            <h2 id="txt-categoria" class="title mb-4 text-center text-uppercase">Produtos</h2>
-            <div id="container-produtos" class="row g-4"></div>
-        </section>
-
-        <section id="step-3" class="step-content">
-            <div class="max-width-600 mx-auto text-center">
-                <h2 class="title mb-4">Como quer receber?</h2>
-                <div class="row g-3">
-                    <div class="col-12">
-                        <button class="btn btn-outline-custom w-100 text-start shadow-sm" onclick="setEntrega('Retirada no Local')">
-                            <i class="fas fa-store me-2 text-primary"></i> Retirar na Loja (Grátis)
-                        </button>
-                    </div>
-                    <div class="col-12">
-                        <button class="btn btn-outline-custom w-100 text-start shadow-sm" onclick="toggleEndereco()">
-                            <i class="fas fa-motorcycle me-2 text-primary"></i> Entregar no meu Endereço
-                        </button>
-                    </div>
-                </div>
-
-                <div id="box-endereco" class="mt-4 d-none text-start bg-white p-4 rounded-4 shadow-sm">
-                    <div class="row g-2">
-                        <div class="col-md-4">
-                            <label class="form-label">CEP</label>
-                            <input type="text" id="cep" class="form-control" placeholder="00000-000" onblur="buscarCEP()">
-                        </div>
-                        <div class="col-md-8">
-                            <label class="form-label">Rua/Logradouro</label>
-                            <input type="text" id="rua" class="form-control" readonly>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Número</label>
-                            <input type="text" id="numero" class="form-control" placeholder="123">
-                        </div>
-                    </div>
-                    <button class="btn btn-primary w-100 mt-4" onclick="validarEntrega()">Ir para pagamento</button>
-                </div>
-            </div>
-        </section>
-
-        <section id="step-4" class="step-content text-center">
-            <h2 class="title mb-4">Forma de Pagamento</h2>
-            <button class="btn btn-outline-custom m-2" onclick="finalizar('Pix')">Pix</button>
-            <button class="btn btn-outline-custom m-2" onclick="irParaEtapa(5)">Cartão</button>
-        </section>
-
-        <section id="step-5" class="step-content text-center">
-            <h2 class="title mb-4">Qual Cartão?</h2>
-            <button class="btn btn-outline-custom m-2" onclick="finalizar('Débito')">Débito</button>
-            <button class="btn btn-outline-custom m-2" onclick="finalizar('Crédito')">Crédito</button>
-        </section>
-    </main>
-
-    <div class="modal fade" id="cartModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow" style="border-radius: 25px;">
-                <div class="modal-header border-0 p-4">
-                    <h5 class="modal-title fw-bold fs-4">Meu Carrinho 🛒</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body p-4">
-                    <div id="cart-list"></div>
-                    <hr>
-                    <div class="d-flex justify-content-between fw-bold fs-5">
-                        <span>Total:</span>
-                        <span class="text-success" id="cart-total">R$ 0,00</span>
-                    </div>
-                </div>
-                <div class="modal-footer border-0 p-4">
-                    <button class="btn btn-light w-100" data-bs-dismiss="modal">Continuar</button>
-                    <button class="btn btn-primary w-100" onclick="fecharModalEIrParaEntrega()">Finalizar Pedido</button>
-                </div>
-            </div>
-        </div>
+<div class="overlay" id="overlay" onclick="handleOverlayClick(event)">
+  <div class="cart-panel" id="cart-panel">
+    <div class="cart-header">
+      <h2 class="cart-title">Seu pedido</h2>
+      <button class="close-btn" onclick="closeCart()">×</button>
     </div>
 
-    <script>
-        let pedido = { itens: [], entrega: '', endereco: '', pagamento: '' };
+    <div class="cart-items" id="cart-items">
+      <p class="cart-empty">Nenhum item adicionado ainda.</p>
+    </div>
 
-        function irParaEtapa(n, cat = '') {
-            document.querySelectorAll('.step-content').forEach(s => s.classList.remove('step-active'));
-            document.getElementById(`step-${n}`).classList.add('step-active');
-            if (n === 2) {
-                document.getElementById('txt-categoria').innerText = cat;
-                renderizarProdutos(cat);
-            }
-        }
+    <div class="cart-footer">
+      <div class="delivery-section">
+        <p class="delivery-label">Entrega</p>
+        <div class="delivery-opts">
+          <button class="delivery-opt selected" id="opt-retirada" onclick="selectDelivery('retirada')">Retirar</button>
+          <button class="delivery-opt" id="opt-delivery" onclick="selectDelivery('delivery')">Delivery</button>
+        </div>
 
-        function renderizarProdutos(cat) {
-            const container = document.getElementById('container-produtos');
-            container.innerHTML = '';
-            let itens = [];
-            if (cat === 'Sanduíches') itens = [{ n: 'Artesanal Bacon', p: 32 }, { n: 'X-Salada', p: 24 }];
-                else if (cat === 'Batata Frita') itens = [{ n: 'Simples', p: 15 }, { n: 'Cheddar e Bacon', p: 22 }];
-            else if (cat === 'Bebidas') itens = [{ n: 'Coca-Cola', p: 7 }, { n: 'Suco', p: 10 }];
-            else itens = [{ n: 'X-Salada mais batata mais coca', p: 50 }, { n: 'Artesanal Bacon mais  batata mais suco', p: 32 }];
-            itens.forEach(i => {
-                container.innerHTML += `
-                <div class="col-md-6 col-lg-4">
-                    <div class="card card-step shadow-sm h-100 p-3 text-center">
-                        <h5 class="fw-bold">${i.n}</h5>
-                        <p class="text-success fw-bold">R$ ${i.p},00</p>
-                        <button class="btn btn-primary btn-sm" onclick="adicionarAoCarrinho('${i.n}', ${i.p})">Adicionar</button>
-                    </div>
-                </div>`;
-            });
-        }
+        <div class="endereco-block" id="endereco-block">
+          <div class="cep-row">
+            <input class="cep-input" type="text" id="cep-input" placeholder="CEP" maxlength="9" oninput="maskCEP(this)" onblur="buscarCEP()">
+            <button class="cep-btn" onclick="buscarCEP()">Ok</button>
+          </div>
 
-        function adicionarAoCarrinho(nome, preco) {
-            pedido.itens.push({ nome, preco });
-            atualizarInterfaceCarrinho();
-        }
+          <button class="loc-btn" id="loc-btn" onclick="usarLocalizacao()">📍 Usar minha localização</button>
 
-        function removerDoCarrinho(index) {
-            pedido.itens.splice(index, 1);
-            atualizarInterfaceCarrinho();
-        }
+          <input class="cep-input full-input" type="text" id="rua-input" placeholder="Rua e bairro (preenche sozinho, mas pode editar)">
 
-        function atualizarInterfaceCarrinho() {
-            const lista = document.getElementById('cart-list');
-            const badge = document.getElementById('cart-count');
-            const totalTxt = document.getElementById('cart-total');
-            
-            badge.innerText = pedido.itens.length;
-            
-            if (pedido.itens.length === 0) {
-                lista.innerHTML = '<p class="text-center">Vazio...</p>';
-                totalTxt.innerText = 'R$ 0,00';
-                return;
-            }
+          <div class="numero-row">
+            <input class="cep-input" type="text" id="numero-input" placeholder="Número">
+            <input class="cep-input" type="text" id="complemento-input" placeholder="Complemento (opcional)">
+          </div>
+        </div>
+      </div>
 
-            let total = 0;
-            lista.innerHTML = '';
-            pedido.itens.forEach((item, index) => {
-                total += item.preco;
-                lista.innerHTML += `
-                <div class="cart-item">
-                    <span>${item.nome}</span>
-                    <button class="btn btn-sm text-danger" onclick="removerDoCarrinho(${index})">Remover</button>
-                </div>`;
-            });
-            totalTxt.innerText = `R$ ${total.toFixed(2)}`;
-        }
+      <div class="payment-section">
+        <p class="delivery-label">Pagamento na entrega</p>
+        <div class="delivery-opts">
+          <button class="delivery-opt selected" id="opt-pix" onclick="selectPayment('pix')">Pix</button>
+          <button class="delivery-opt" id="opt-credito" onclick="selectPayment('credito')">Crédito</button>
+          <button class="delivery-opt" id="opt-debito" onclick="selectPayment('debito')">Débito</button>
+          <button class="delivery-opt" id="opt-dinheiro" onclick="selectPayment('dinheiro')">Dinheiro</button>
+        </div>
+        <div class="troco-row" id="troco-row">
+          <input class="cep-input" type="number" id="troco-input" placeholder="Troco para quanto?">
+        </div>
+      </div>
 
-        function fecharModalEIrParaEntrega() {
-            if (pedido.itens.length === 0) return alert("Carrinho vazio!");
-            const modal = bootstrap.Modal.getInstance(document.getElementById('cartModal')) || new bootstrap.Modal(document.getElementById('cartModal'));
-            modal.hide();
-            irParaEtapa(3);
-        }
+      <div class="cart-total-row">
+        <span class="cart-total-label">Total</span>
+        <span class="cart-total-value" id="cart-total">R$ 0,00</span>
+      </div>
+      <button class="whats-btn" id="whats-btn" onclick="enviarWhats()" disabled>
+        Enviar via WhatsApp
+      </button>
+    </div>
+  </div>
+</div>
 
-        function toggleEndereco() { document.getElementById('box-endereco').classList.toggle('d-none'); }
-        function setEntrega(t) { pedido.entrega = t; pedido.endereco = 'Loja'; irParaEtapa(4); }
-        function buscarCEP() {
-            let cep = document.getElementById('cep').value.replace(/\D/g, '');
-            if (cep.length === 8) {
-                fetch(`https://viacep.com.br/ws/${cep}/json/`).then(r => r.json()).then(d => {
-                    if(!d.erro) document.getElementById('rua').value = d.logradouro;
-                });
-            }
-        }
-        function validarEntrega() {
-            if(!document.getElementById('rua').value) return alert("CEP!");
-            pedido.entrega = 'Delivery';
-            pedido.endereco = document.getElementById('rua').value;
-            irParaEtapa(4);
-        }
-
-        function finalizar(pgto) {
-            let total = 0;
-            pedido.itens.forEach(i => total += i.preco);
-            const msg = `Novo Pedido: R$ ${total.toFixed(2)} - Pagamento: ${pgto}`;
-            window.open(`https://api.whatsapp.com/send?phone=5561995938558&text=${encodeURIComponent(msg)}`);
-        }
-    </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
