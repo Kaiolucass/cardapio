@@ -1,15 +1,15 @@
 const produtos = [
-  { id:1, cat:'Lanches', img:'https://placehold.co/600x450/1a1614/c9a24b?text=Noir+Classico', name:'Noir Clássico', desc:'Blend 180g maturado, cheddar defumado, cebola caramelizada e aioli trufado', price:38 },
-  { id:2, cat:'Lanches', img:'https://placehold.co/600x450/1a1614/c9a24b?text=Bacon+%26+Black', name:'Bacon & Black', desc:'Blend 200g, bacon artesanal, queijo prato, rúcula e molho de mostarda dijon', price:44 },
-  { id:3, cat:'Lanches', img:'https://placehold.co/600x450/1a1614/c9a24b?text=Smash+Duplo', name:'Smash Duplo', desc:'Dois blends finos de 90g, cheddar americano, picles e molho secreto da casa', price:42 },
-  { id:4, cat:'Lanches', img:'https://placehold.co/600x450/1a1614/c9a24b?text=Prime+Angus', name:'Prime Angus', desc:'Blend angus 220g, brie, geleia de pimenta, rúcula e brioche artesanal', price:56 },
-  { id:5, cat:'Batatas', img:'https://placehold.co/600x450/1a1614/c9a24b?text=Frites+Simples', name:'Frites simples', desc:'Batata palito crocante com sal grosso e alecrim fresco', price:18 },
-  { id:6, cat:'Batatas', img:'https://placehold.co/600x450/1a1614/c9a24b?text=Frites+Black', name:'Frites black', desc:'Batata coberta com cheddar cremoso, bacon e cebolinha', price:26 },
-  { id:7, cat:'Bebidas', img:'https://placehold.co/600x450/1a1614/c9a24b?text=Refrigerante', name:'Refrigerante lata', desc:'Coca-Cola, Guaraná ou Sprite — 350ml gelada', price:8 },
-  { id:8, cat:'Bebidas', img:'https://placehold.co/600x450/1a1614/c9a24b?text=Suco+Natural', name:'Suco natural', desc:'Laranja, maracujá ou abacaxi espremido na hora — 400ml', price:14 },
-  { id:9, cat:'Bebidas', img:'https://placehold.co/600x450/1a1614/c9a24b?text=Cerveja', name:'Cerveja artesanal', desc:'IPA ou American Lager — 500ml', price:22 },
-  { id:10, cat:'Combos', img:'https://placehold.co/600x450/1a1614/c9a24b?text=Combo+Noir', name:'Combo Noir', desc:'Noir Clássico + Frites simples + Refrigerante', price:54 },
-  { id:11, cat:'Combos', img:'https://placehold.co/600x450/1a1614/c9a24b?text=Combo+Premium', name:'Combo Premium', desc:'Prime Angus + Frites black + Suco natural', price:76 },
+  { id:1, cat:'Lanches', img:'img/hamburguer.png', name:'Noir Clássico', desc:'Blend 180g maturado, cheddar defumado, cebola caramelizada e aioli trufado', price:38 },
+  { id:2, cat:'Lanches', img:'img/hamburguer2.png', name:'Bacon & Black', desc:'Blend 200g, bacon artesanal, queijo prato, rúcula e molho de mostarda dijon', price:44 },
+  { id:3, cat:'Lanches', img:'img/hamburguer.png', name:'Smash Duplo', desc:'Dois blends finos de 90g, cheddar americano, picles e molho secreto da casa', price:42 },
+  { id:4, cat:'Lanches', img:'img/hamburguer2.png', name:'Prime Angus', desc:'Blend angus 220g, brie, geleia de pimenta, rúcula e brioche artesanal', price:56 },
+  { id:5, cat:'Batatas', img:'img/batata2.png', name:'Frites simples', desc:'Batata palito crocante com sal grosso e alecrim fresco', price:18 },
+  { id:6, cat:'Batatas', img:'img/batata.png', name:'Frites black', desc:'Batata coberta com cheddar cremoso, bacon e cebolinha', price:26 },
+  { id:7, cat:'Bebidas', img:'img/refri.png', name:'Refrigerante lata', desc:'Coca-Cola, Guaraná ou Sprite — 350ml gelada', price:8 },
+  { id:8, cat:'Bebidas', img:'img/suco.png', name:'Suco natural', desc:'Laranja, maracujá ou abacaxi espremido na hora — 400ml', price:14 },
+  { id:9, cat:'Bebidas', img:'img/breja.png', name:'Cerveja artesanal', desc:'IPA ou American Lager — 500ml', price:22 },
+  { id:10, cat:'Combos', img:'img/image.png', name:'Combo Noir', desc:'Noir Clássico + Frites simples + Refrigerante', price:54 },
+  { id:11, cat:'Combos', img:'img/image 2.png', name:'Combo Premium', desc:'Prime Angus + Frites black + Suco natural', price:76 },
 ];
 
 // Número de WhatsApp do estabelecimento — TROCAR pelo número real
